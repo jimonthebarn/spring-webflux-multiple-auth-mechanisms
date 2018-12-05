@@ -13,6 +13,7 @@ import org.springframework.security.core.Authentication
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.web.server.SecurityWebFilterChain
 import org.springframework.security.web.server.authentication.AuthenticationWebFilter
+import org.springframework.security.web.server.util.matcher.ServerWebExchangeMatchers
 import reactor.core.publisher.Mono
 
 private val logger = KotlinLogging.logger {}
@@ -43,7 +44,6 @@ class SecurityConfig {
 
         //configure security for resource a
         http
-//                .securityMatcher(ServerWebExchangeMatchers.pathMatchers("/ressourceA/**"))
                 .addFilterAt(authFilterResourceA, SecurityWebFiltersOrder.AUTHENTICATION)
                 .authorizeExchange()
                 .pathMatchers("/resourceA/**")
@@ -51,7 +51,6 @@ class SecurityConfig {
 
         //configure security for resource b
         http
-//                .securityMatcher(ServerWebExchangeMatchers.pathMatchers("/ressourceB/**"))
                 .addFilterAt(authFilterResourceB, SecurityWebFiltersOrder.AUTHENTICATION)
                 .authorizeExchange()
                 .pathMatchers("/resourceB/**")
