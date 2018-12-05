@@ -1,5 +1,6 @@
 package localhost.playground.multi.auth
 
+import mu.KotlinLogging
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -8,11 +9,13 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity
 import org.springframework.security.config.web.server.SecurityWebFiltersOrder
 import org.springframework.security.config.web.server.ServerHttpSecurity
+import org.springframework.security.core.Authentication
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.web.server.SecurityWebFilterChain
 import org.springframework.security.web.server.authentication.AuthenticationWebFilter
-import org.springframework.security.web.server.util.matcher.ServerWebExchangeMatchers
 import reactor.core.publisher.Mono
+
+private val logger = KotlinLogging.logger {}
 
 @Configuration
 @EnableWebFluxSecurity
@@ -27,8 +30,8 @@ class SecurityConfig {
     }
 
     companion object {
-        const val ROLE_ADMIN_RESOURCE_A = "ADMIN_RESSOURCE_A"
-        const val ROLE_ADMIN_RESOURCE_B = "ADMIN_RESSOURCE_B"
+        const val ADMIN_RESOURCE_A = "ADMIN_RESSOURCE_A"
+        const val ADMIN_RESOURCE_B = "ADMIN_RESSOURCE_B"
     }
 
     @Bean
@@ -40,19 +43,19 @@ class SecurityConfig {
 
         //configure security for resource a
         http
-                .securityMatcher(ServerWebExchangeMatchers.pathMatchers("/ressourceA/**"))
+//                .securityMatcher(ServerWebExchangeMatchers.pathMatchers("/ressourceA/**"))
                 .addFilterAt(authFilterResourceA, SecurityWebFiltersOrder.AUTHENTICATION)
                 .authorizeExchange()
                 .pathMatchers("/resourceA/**")
-                .hasRole(ROLE_ADMIN_RESOURCE_A)
+                .hasRole(ADMIN_RESOURCE_A)
 
         //configure security for resource b
         http
-                .securityMatcher(ServerWebExchangeMatchers.pathMatchers("/ressourceB/**"))
+//                .securityMatcher(ServerWebExchangeMatchers.pathMatchers("/ressourceB/**"))
                 .addFilterAt(authFilterResourceB, SecurityWebFiltersOrder.AUTHENTICATION)
                 .authorizeExchange()
                 .pathMatchers("/resourceB/**")
-                .hasRole(ROLE_ADMIN_RESOURCE_B)
+                .hasRole(ADMIN_RESOURCE_B)
 
         // global config
         http
@@ -84,11 +87,14 @@ class SecurityConfig {
                     .map { it.request.headers.getFirst("X-Application-Authentication") ?: "" }
                     .filter { it == "Bearer tokenForA" }
                     .map {
-                        UsernamePasswordAuthenticationToken(
+                        val authentication = UsernamePasswordAuthenticationToken(
                                 "userWithAccessRightsToA",
                                 it,
-                                listOf(SimpleGrantedAuthority(ROLE_ADMIN_RESOURCE_A))
+                                listOf(SimpleGrantedAuthority("ROLE_$ADMIN_RESOURCE_A"))
                         )
+                        logger.info { "Created authentication: $authentication" }
+
+                        authentication as Authentication
                     }
         }
 
@@ -108,11 +114,14 @@ class SecurityConfig {
                     .map { it.request.headers.getFirst("X-Application-Authentication") ?: "" }
                     .filter { it == "Bearer tokenForB" }
                     .map {
-                        UsernamePasswordAuthenticationToken(
+                        val authentication = UsernamePasswordAuthenticationToken(
                                 "userWithAccessRightsToB",
                                 it,
-                                listOf(SimpleGrantedAuthority(ROLE_ADMIN_RESOURCE_B))
+                                listOf(SimpleGrantedAuthority("ROLE_$ADMIN_RESOURCE_B"))
                         )
+                        logger.info { "Created authentication: $authentication" }
+
+                        authentication as Authentication
                     }
         }
 

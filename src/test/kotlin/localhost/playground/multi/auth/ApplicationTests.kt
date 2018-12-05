@@ -46,7 +46,15 @@ class ApplicationTests {
     }
 
     @Test
-    fun `test successful access resource B with token for B`() {
+    fun `test unauthorized access to resource A without a token`() {
+        webClient.get().uri("/resourceA/")
+                .accept(MediaType.TEXT_PLAIN)
+                .exchange()
+                .expectStatus().isUnauthorized
+    }
+
+    @Test
+    fun `test successful access to resource B with token for B`() {
         webClient.get().uri("/resourceA/")
                 .header("X-Application-Authentication", "Bearer tokenForB")
                 .accept(MediaType.TEXT_PLAIN)
@@ -62,6 +70,14 @@ class ApplicationTests {
     fun `test unauthorized access to resource B with token for A`() {
         webClient.get().uri("/resourceB/")
                 .header("X-Application-Authentication", "Bearer tokenForA")
+                .accept(MediaType.TEXT_PLAIN)
+                .exchange()
+                .expectStatus().isUnauthorized
+    }
+
+    @Test
+    fun `test unauthorized access to resource B without a token`() {
+        webClient.get().uri("/resourceB/")
                 .accept(MediaType.TEXT_PLAIN)
                 .exchange()
                 .expectStatus().isUnauthorized
