@@ -55,7 +55,7 @@ class ApplicationTests {
 
     @Test
     fun `test successful access to resource B with token for B`() {
-        webClient.get().uri("/resourceA/")
+        webClient.get().uri("/resourceB/")
                 .header("X-Application-Authentication", "Bearer tokenForB")
                 .accept(MediaType.TEXT_PLAIN)
                 .exchange()
