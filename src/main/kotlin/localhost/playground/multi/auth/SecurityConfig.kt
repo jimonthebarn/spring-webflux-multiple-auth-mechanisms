@@ -30,8 +30,8 @@ class SecurityConfig {
     }
 
     companion object {
-        const val ADMIN_RESOURCE_A = "ADMIN_RESSOURCE_A"
-        const val ADMIN_RESOURCE_B = "ADMIN_RESSOURCE_B"
+        const val ADMIN_RESOURCE_A = "ADMIN_RESOURCE_A"
+        const val ADMIN_RESOURCE_B = "ADMIN_RESOURCE_B"
     }
 
     @Bean

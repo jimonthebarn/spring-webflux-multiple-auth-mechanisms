@@ -42,7 +42,7 @@ class ApplicationTests {
                 .header("X-Application-Authentication", "Bearer tokenForB")
                 .accept(MediaType.TEXT_PLAIN)
                 .exchange()
-                .expectStatus().isUnauthorized
+                .expectStatus().isForbidden
     }
 
     @Test
@@ -72,7 +72,7 @@ class ApplicationTests {
                 .header("X-Application-Authentication", "Bearer tokenForA")
                 .accept(MediaType.TEXT_PLAIN)
                 .exchange()
-                .expectStatus().isUnauthorized
+                .expectStatus().isForbidden
     }
 
     @Test
