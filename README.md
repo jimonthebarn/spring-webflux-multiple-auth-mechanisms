@@ -10,9 +10,9 @@ I am desiring the following security aspects:
 - Resource B should be protected by authentication method B
 - All other resources require authentication
 
-I have added [tests](./src/test/kotlin/localhost/playground/multi/auth/ApplicationTests.kt) that verify this behaviour.
+I have added [tests](./src/test/kotlin/localhost/playground/multi/auth/ApplicationTests.kt) that verify this behaviour. Some of the tests are passing, some of them are failing and I assume it is due to a misconfiguration (e.g. not properly registering filters.)
 
-The idea im following here is that for every authentication method I register a _AuthenticationWebFilter_ that would ideally only be processed on the resources it it supposed to be protecting (if thats even possible)
+The idea im following here is that for every authentication method I register a _AuthenticationWebFilter_ that would ideally only be processed on the resources it it supposed to be protecting (if thats even possible). 
 
 Take a look at the [security config](./src/main/kotlin/localhost/playground/multi/auth/SecurityConfig.kt) to see with what I have come up so far.
  
