@@ -62,7 +62,7 @@ class ApplicationTests {
                 .expectStatus().isOk
                 .expectBody()
                 .consumeWith {
-                    assertThat(String(it.responseBody!!)).isEqualTo("Accessed resource A")
+                    assertThat(String(it.responseBody!!)).isEqualTo("Accessed resource B")
                 }
     }
 
